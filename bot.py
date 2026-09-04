@@ -20,10 +20,10 @@ bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
 class AnunciarModal(discord.ui.Modal, title="Criar Anúncio"):
-    texto = discord.ui.TextInput(label="Cole seu texto aqui", style=discord.TextStyle.paragraph, placeholder="Cole aqui...", required=True, max_length=4000)
+    texto = discord.ui.TextInput(label="Cole seu texto aqui", style=discord.TextStyle.paragraph, required=True, max_length=4000)
     async def on_submit(self, interaction: discord.Interaction):
         conteudo = self.texto.value.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
-        embed = discord.Embed(description=conteudo, color=0x5865F2)
+        embed = discord.Embed(description=conteudo, color=0x2B88D8)
         file = discord.File("banner.png", filename="banner.png")
         embed.set_image(url="attachment://banner.png")
         await interaction.response.send_message(embed=embed, file=file)
