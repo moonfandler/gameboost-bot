@@ -37,9 +37,11 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
             description=conteudo,
             color=0x8A2BE2
         )
-        embed.set_image(url="https://cdn.allkeyshop.com/images/merchants/logotext/gameboost.webp")
+        # BANNER COMPLETO - NÃO SÓ O NOME
+        embed.set_image(url="attachment://banner.png")
+        file = discord.File("banner.png", filename="banner.png")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
