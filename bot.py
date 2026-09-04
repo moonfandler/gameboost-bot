@@ -40,9 +40,11 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
             description=conteudo,
             color=0x8A2BE2  # BORDA ROXA
         )
-        # IMAGEM ATUALIZADA CONFORME PEDIDO
-        embed.set_image(url="https://chatgpt.com/backend-api/estuary/content?id=file_00000000adc4820e8e080051cc3f1ed1&ts=496807&p=fs&cid=1&sig=fef48ae3da814e00afda013c07e83c4430570e640b7865e13d0d06539db6f5f4&v=0")
-        await interaction.response.send_message(embed=embed)
+        
+        # NÃO EXPIRA MAIS — usa arquivo local
+        file = discord.File("banner_final.png", filename="banner_final.png")
+        embed.set_image(url="attachment://banner_final.png")
+        await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
