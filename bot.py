@@ -5,21 +5,17 @@ from threading import Thread
 import os
 
 app = Flask('')
-
 @app.route('/')
 def home():
     return "Bot On!"
-
 def run():
     app.run(host='0.0.0.0', port=8080)
-
 def keep_alive():
     t = Thread(target=run)
     t.start()
 
 intents = discord.Intents.default()
 intents.message_content = True
-
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
@@ -34,14 +30,18 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        # Isso arruma se você colar tudo embolado
         conteudo = self.texto.value
+        # Separa os tópicos automaticamente
         conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
+
         embed = discord.Embed(
             description=conteudo,
             color=0x8A2BE2  # BORDA ROXA
         )
         file = discord.File("banner_final.png", filename="banner_final.png")
         embed.set_image(url="attachment://banner_final.png")
+
         await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
