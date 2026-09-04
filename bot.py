@@ -20,22 +20,36 @@ async def on_ready():
     await bot.tree.sync()
     print(f"Online como {bot.user}")
 
-@bot.tree.command(name="anunciar", description="Anúncio bonito da GameBoost")
-@app_commands.describe(mensagem="Texto do anúncio")
+@bot.tree.command(name="anunciar", description="Anúncio bonito estilo BR2G")
+@app_commands.describe(mensagem="Mensagem principal do anúncio")
 async def anunciar(interaction: discord.Interaction, mensagem: str):
     if not interaction.user.guild_permissions.administrator:
         await interaction.response.send_message("❌ Só ADM!", ephemeral=True)
         return
 
     embed = discord.Embed(
-        title="⚠️ ATENÇÃO - Plataforma Oficial",
-        description=f"### 🔗 Link Oficial:\n**https://www.gameboost.com/**\n\n{mensagem}\n\n---\n**🛒 Quer comprar itens?**\nAcesse nosso site oficial para ver novidades e ofertas.\n\n**💬 Precisa de ajuda?**\nNosso suporte funciona **24h**. Abra um ticket em <#{1544751928108388392}> e nossa equipe te ajuda!",
-        color=0x9B0000
+        title="GameBoost Marketplace | Regras e Orientações",
+        description=f"""
+{mensagem}
+
+· 📜 **Siga os Termos de Serviço e as Diretrizes da Comunidade do Discord**
+GameBoost Marketplace funciona na plataforma Discord. Todos os membros devem seguir os Termos de Serviço.
+
+· ✅ **Use o serviço oficial da GameBoost quando solicitado.**
+
+· ⚠️ **Ao abrir um ticket, inclua os detalhes e links relevantes** quando necessário.
+
+· 🔒 **Não compartilhe dados pessoais ou senhas.**
+
+· 💬 **Se algo der errado, entre em contato com a equipe ou o suporte.**
+
+Para mais informações, acesse **[https://www.gameboost.com/](https://www.gameboost.com/)** ou abra um ticket em <#{1544751928108388392}>.
+""",
+        color=0x00D26A  # verde igual da foto
     )
-    embed.set_footer(text="GameBoost Marketplace • Suporte 24 horas", icon_url="https://www.gameboost.com/favicon.ico")
-    embed.set_thumbnail(url="https://www.gameboost.com/favicon.ico")
+    embed.set_footer(text="GameBoost Marketplace • Suporte 24 horas")
 
     await interaction.channel.send(embed=embed)
-    await interaction.response.send_message("✅ Anúncio bonito enviado!", ephemeral=True)
+    await interaction.response.send_message("✅ Anúncio no estilo BR2G enviado!", ephemeral=True)
 
 bot.run(os.getenv("TOKEN"))
