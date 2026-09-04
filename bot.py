@@ -1,27 +1,39 @@
 import discord
 from discord.ext import commands
 import os
+from flask import Flask
+import threading
+
+# pra não cair no Render
+app = Flask('')
+@app.route('/')
+def home(): return "Bot online"
+threading.Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
 
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+@bot.event
+async def on_ready():
+    print(f"Logado como {bot.user}")
+
 @bot.command(name="regras")
 async def regras(ctx):
     embed = discord.Embed(
-        title="GameBoost Marketplace | Regras e Orientações do Middleman",
-        color=0x2ECC71,
+        title="GameBoost Marketplace | Regras e Orientações",
+        color=0x2ECC71, # barrinha verde fina igual BR2G
         description=(
-            "·  📜 **Siga os [Termos de Serviço](https://discord.com/terms) e as [Diretrizes da Comunidade](https://discord.com/guidelines) do Discord**\n"
-            "GameBoost funciona na plataforma Discord. Todos devem seguir os Termos.\n\n"
-            "·  ✅ Use o serviço oficial de Middleman do servidor quando solicitado.\n\n"
-            "·  ⚠️ Ao abrir um ticket, inclua os detalhes e links relevantes.\n\n"
+            "·  📜 **Siga os [Termos de Serviço](https://discord.com/terms) e as [Diretrizes da Comunidade](https://discord.com/guidelines)**\n"
+            "Todos devem seguir os Termos do Discord. Descumprimento = blacklist.\n\n"
+            "·  ✅ Use o serviço oficial de Middleman quando solicitado.\n\n"
+            "·  ⚠️ Ao abrir ticket, inclua detalhes e links relevantes.\n\n"
             "·  🔒 Não compartilhe dados pessoais ou senhas.\n\n"
-            "·  💬 Se algo der errado, contate <@634098800822059012> ou visite <#1544753178434867390>.\n\n"
+            "·  💬 Dúvidas? Contate <@634098800822059012> ou <#1544753178434867390>\n\n"
             "·  **Atividades Maliciosas**\n"
-            "Não toleramos fraudes, roubo de cookies ou phishing. Resultará em blacklist.\n\n"
+            "Fraude, cookie logger, phishing = blacklist permanente.\n\n"
             "·  **Trocas e Divulgação**\n"
-            "Publicidade por DM é proibida. Para trocas use <#1544752499670384720>."
+            "DM de publicidade é proibida. Use <#1544752499670384720>."
         )
     )
     embed.set_footer(text="GameBoost Marketplace")
