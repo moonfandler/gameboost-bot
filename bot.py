@@ -37,5 +37,18 @@ async def on_ready():
 async def anunciar(interaction: discord.Interaction):
     await interaction.response.send_modal(AnunciarModal())
 
+# NOVO COMANDO SEM IMAGEM - tem que ficar AQUI
+class TextoModal(discord.ui.Modal, title="Criar Texto sem Imagem"):
+    texto = discord.ui.TextInput(label="Cole seu texto aqui", style=discord.TextStyle.paragraph, required=True, max_length=4000)
+    async def on_submit(self, interaction: discord.Interaction):
+        conteudo = self.texto.value.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
+        embed = discord.Embed(description=conteudo, color=0x2B88D8)
+        await interaction.response.send_message(embed=embed)
+
+@tree.command(name="texto", description="Anunciar SEM imagem")
+async def texto_cmd(interaction: discord.Interaction):
+    await interaction.response.send_modal(TextoModal())
+
+# ISSO SEMPRE TEM QUE SER O FINAL
 keep_alive()
 bot.run(os.getenv("DISCORD_TOKEN"))
