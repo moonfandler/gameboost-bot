@@ -19,7 +19,6 @@ intents.message_content = True
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
-# JANELA GRANDE QUE CONSERTA A DESORGANIZAÇÃO
 class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     texto = discord.ui.TextInput(
         label="Cole seu texto aqui",
@@ -30,17 +29,14 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        # Isso arruma se você colar tudo embolado
         conteudo = self.texto.value
-        # Separa os tópicos automaticamente
         conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
 
         embed = discord.Embed(
             description=conteudo,
-            color=0x8A2BE2  # BORDA ROXA
+            color=0x8A2BE2
         )
-        
-        # IMAGEM NOVA SEM MARCA D'ÁGUA
+        # NOVA IMAGEM
         file = discord.File("banner.png", filename="banner.png")
         embed.set_image(url="attachment://banner.png")
 
