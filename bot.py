@@ -1,42 +1,56 @@
 import discord
-from discord.ext import commands
-import os
+from discord import app_commands
 from flask import Flask
-import threading
+from threading import Thread
+import os
 
-# pra não cair no Render
+# --- PARTE DO SITE PRA NÃO DORMIR NO RENDER ---
 app = Flask('')
-@app.route('/')
-def home(): return "Bot online"
-threading.Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
 
+@app.route('/')
+def home():
+    return "Bot GameBoost On!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# --- PARTE DO BOT DO DISCORD ---
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = discord.Client(intents=intents)
+tree = app_commands.CommandTree(bot)
 
 @bot.event
 async def on_ready():
-    print(f"Logado como {bot.user}")
+    await tree.sync()
+    print(f"Bot logado como {bot.user} - {len(tree.get_commands())} comandos sincronizados!")
 
-@bot.command(name="regras")
-async def regras(ctx):
+# SEU COMANDO ANUNCIAR ARRUMADO
+@tree.command(name="anunciar", description="Anunciar no marketplace da GameBoost")
+@app_commands.describe(
+    produto="Nome do produto que você quer anunciar"
+)
+async def anunciar(interaction: discord.Interaction, produto: str):
+    # FIX DO ERRO "O aplicativo não respondeu"
+    await interaction.response.defer(ephemeral=True)
+
     embed = discord.Embed(
-        title="GameBoost Marketplace | Regras e Orientações",
-        color=0x2ECC71, # barrinha verde fina igual BR2G
-        description=(
-            "·  📜 **Siga os [Termos de Serviço](https://discord.com/terms) e as [Diretrizes da Comunidade](https://discord.com/guidelines)**\n"
-            "Todos devem seguir os Termos do Discord. Descumprimento = blacklist.\n\n"
-            "·  ✅ Use o serviço oficial de Middleman quando solicitado.\n\n"
-            "·  ⚠️ Ao abrir ticket, inclua detalhes e links relevantes.\n\n"
-            "·  🔒 Não compartilhe dados pessoais ou senhas.\n\n"
-            "·  💬 Dúvidas? Contate <@634098800822059012> ou <#1544753178434867390>\n\n"
-            "·  **Atividades Maliciosas**\n"
-            "Fraude, cookie logger, phishing = blacklist permanente.\n\n"
-            "·  **Trocas e Divulgação**\n"
-            "DM de publicidade é proibida. Use <#1544752499670384720>."
-        )
+        title="GameBoost Marketplace",
+        description=f"✅ **Anúncio criado com sucesso!**\n\nProduto: **{produto}**\nAnunciado por: {interaction.user.mention}",
+        color=0x5865F2
     )
-    embed.set_footer(text="GameBoost Marketplace")
-    await ctx.send(embed=embed)
+    embed.set_footer(text="GameBoost Marketplace • APP")
+    
+    # Manda no canal onde usou o comando
+    await interaction.channel.send(embed=embed)
+    
+    # Responde pra você que deu certo
+    await interaction.followup.send(f"Anunciado: {produto}", ephemeral=True)
 
+# INICIA TUDO
+keep_alive()
 bot.run(os.getenv("DISCORD_TOKEN"))
