@@ -5,25 +5,20 @@ from threading import Thread
 import os
 
 app = Flask('')
-
 @app.route('/')
 def home():
     return "Bot On!"
-
 def run():
     app.run(host='0.0.0.0', port=8080)
-
 def keep_alive():
     t = Thread(target=run)
     t.start()
 
 intents = discord.Intents.default()
 intents.message_content = True
-
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
-# JANELA GRANDE QUE CONSERTA A DESORGANIZAÇÃO
 class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     texto = discord.ui.TextInput(
         label="Cole seu texto aqui",
@@ -36,23 +31,30 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     async def on_submit(self, interaction: discord.Interaction):
         conteudo = self.texto.value
         conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
-        embed = discord.Embed(
-            description=conteudo,
-            color=0x8A2BE2  # BORDA ROXA
-        )
-        
-        # NÃO EXPIRA MAIS — usa arquivo local
-        file = discord.File("banner_final.png", filename="banner_final.png")
-        embed.set_image(url="attachment://banner_final.png")
-        await interaction.response.send_message(embed=embed, file=file)
+        embed = discord.Embed(description=conteudo, color=0x8A2BE2)
+
+        try:
+            # TENTA ENVIAR COM IMAGEM LOCAL
+            file = discord.File("banner_final.png", filename="banner_final.png")
+            embed.set_image(url="attachment://banner_final.png")
+            await interaction.response.send_message(embed=embed, file=file)
+        except Exception as e:
+            print(f"Erro imagem: {e}")
+            # SE NÃO ACHAR A IMAGEM, MANDA SÓ O TEXTO PRA NÃO DAR ERRO
+            await interaction.response.send_message(embed=embed)
 
 @bot.event
 async def on_ready():
     await tree.sync()
     print(f"Bot logado como {bot.user}")
 
+# AGORA TEM OS 2 COMANDOS
 @tree.command(name="anunciar", description="Abre a janela para colar seu texto organizado")
 async def anunciar(interaction: discord.Interaction):
+    await interaction.response.send_modal(AnunciarModal())
+
+@tree.command(name="anuncio", description="Abre a janela para colar seu texto organizado")
+async def anuncio(interaction: discord.Interaction):
     await interaction.response.send_modal(AnunciarModal())
 
 keep_alive()
