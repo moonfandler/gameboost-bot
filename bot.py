@@ -27,28 +27,24 @@ tree = app_commands.CommandTree(bot)
 @bot.event
 async def on_ready():
     await tree.sync()
-    print(f"Bot logado como {bot.user} - {len(tree.get_commands())} comandos sincronizados!")
+    print(f"Bot logado como {bot.user}")
 
-# SEU COMANDO ANUNCIAR ARRUMADO
+# COMANDO ANUNCIAR - SEM ANUNCIADO POR
 @tree.command(name="anunciar", description="Anunciar no marketplace da GameBoost")
 @app_commands.describe(
     produto="Nome do produto que você quer anunciar"
 )
 async def anunciar(interaction: discord.Interaction, produto: str):
-    # FIX DO ERRO "O aplicativo não respondeu"
     await interaction.response.defer(ephemeral=True)
 
     embed = discord.Embed(
         title="GameBoost Marketplace",
-        description=f"✅ **Anúncio criado com sucesso!**\n\nProduto: **{produto}**\nAnunciado por: {interaction.user.mention}",
+        description=f"✅ **Anúncio criado com sucesso!**\n\nProduto: **{produto}**",
         color=0x5865F2
     )
     embed.set_footer(text="GameBoost Marketplace • APP")
-    
-    # Manda no canal onde usou o comando
+
     await interaction.channel.send(embed=embed)
-    
-    # Responde pra você que deu certo
     await interaction.followup.send(f"Anunciado: {produto}", ephemeral=True)
 
 # INICIA TUDO
