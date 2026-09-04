@@ -1,55 +1,47 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
-from flask import Flask
-from threading import Thread
 import os
+from flask import Flask
+import threading
 
+# Mantém o Render acordado
 app = Flask('')
 @app.route('/')
-def home(): return "GameBoost Online!"
-def run(): app.run(host='0.0.0.0', port=8080)
-Thread(target=run).start()
+def home():
+    return "Bot is running!"
 
+def run_flask():
+    app.run(host='0.0.0.0', port=8080)
+
+threading.Thread(target=run_flask).start()
+
+# Config do bot
 intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = discord.Client(intents=intents)
+tree = app_commands.CommandTree(bot)
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()
-    print(f"Online como {bot.user}")
+    await tree.sync()
+    print(f"Bot logado como {bot.user}")
 
-@bot.tree.command(name="anunciar", description="Anúncio bonito estilo BR2G")
-@app_commands.describe(mensagem="Mensagem principal do anúncio")
-async def anunciar(interaction: discord.Interaction, mensagem: str):
-    if not interaction.user.guild_permissions.administrator:
-        await interaction.response.send_message("❌ Só ADM!", ephemeral=True)
-        return
-
+@tree.command(name="anunciar", description="Anuncia os termos bonitinhos")
+async def anunciar(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="GameBoost Marketplace | Regras e Orientações",
-        description=f"""
-{mensagem}
-
-· 📜 **Siga os Termos de Serviço e as Diretrizes da Comunidade do Discord**
-GameBoost Marketplace funciona na plataforma Discord. Todos os membros devem seguir os Termos de Serviço.
-
-· ✅ **Use o serviço oficial da GameBoost quando solicitado.**
-
-· ⚠️ **Ao abrir um ticket, inclua os detalhes e links relevantes** quando necessário.
-
-· 🔒 **Não compartilhe dados pessoais ou senhas.**
-
-· 💬 **Se algo der errado, entre em contato com a equipe ou o suporte.**
-
-Para mais informações, acesse **[https://www.gameboost.com/](https://www.gameboost.com/)** ou abra um ticket em <#{1544751928108388392}>.
-""",
-        color=0x00D26A  # verde igual da foto
+        title="📜 Termos de Serviço - GameBoost Marketplace",
+        description=(
+            "**Ao usar nossos serviços você concorda com:**\n\n"
+            "Pode resultar em blacklist temporária ou permanente do serviço. Não somos responsáveis por itens ou fundos perdidos durante ou depois da troca.\n\n"
+            "Mesmo que a perda aconteça por um erro do Middleman, não assumimos responsabilidade. Somos humanas e erros podem acontecer. Se você espera uma experiência totalmente sem erros, use um serviço automatizado de Middleman.\n\n"
+            "Ex: itens duplicados ou excluídos.\n\n"
+            "**Detalhes do Pagamento:** Confira todos os dados de pagamento antes de confirmar a troca. Não assumiremos responsabilidade por erros como endereço de cripto, nomes de usuário ou dados de pagamento incorretos.\n\n"
+            "**Informações Adicionais:** Usar extensões ou sistemas como RoEarn, catálogos dentro do jogo ou métodos de doação que tentam 'salvar' Robux fará o recebedor receber 10% a menos. Isso também se aplica a jogos como PLS DONATE; esses métodos não são recomendados."
+        ),
+        color=0x00D26A
     )
-    embed.set_footer(text="GameBoost Marketplace • Suporte 24 horas")
-
+    embed.set_footer(text="BR2G Marketplace • Middleman Oficial")
+    
     await interaction.channel.send(embed=embed)
-    await interaction.response.send_message("✅ Anúncio no estilo BR2G enviado!", ephemeral=True)
+    await interaction.response.send_message("✅ Enviado bonitinho!", ephemeral=True)
 
 bot.run(os.getenv("TOKEN"))
