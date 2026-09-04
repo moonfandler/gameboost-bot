@@ -36,6 +36,7 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
             description=conteudo,
             color=0x8A2BE2
         )
+        # BANNER EXATO QUE VOCÊ MANDOU
         embed.set_image(url="attachment://banner.png")
         file = discord.File("banner.png", filename="banner.png")
 
