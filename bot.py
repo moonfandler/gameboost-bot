@@ -27,38 +27,15 @@ async def on_ready():
     await tree.sync()
     print(f"Bot logado como {bot.user}")
 
-@tree.command(name="regras", description="Manda as regras com a logo embaixo")
-async def regras(interaction: discord.Interaction):
-    descricao_regras = """
-ou captura de IP.
-Qualquer envolvimento em atividade maliciosa ou ilegal resultará em blacklist permanente e poderá ser denunciado ao Discord Trust & Safety.
-
-**· Trocas e Divulgação**
-Publicidade ou autopromoção não autorizada por DM é proibida.
-Para comprar um anúncio ou divulgar um serviço, contate @Violet diretamente.
-Para trocas, use o canal #⟫・trocas-e-vendas.
-
-**· Observações Adicionais**
-As regras e políticas podem mudar a qualquer momento sem aviso prévio.
-Use o bom senso, seja respeitoso e ajude a manter BR2G Marketplace seguro, organizado e profissional.
-"""
+@tree.command(name="anunciar", description="Seu texto já sai organizado igual do print")
+@app_commands.describe(texto="Cole seu texto aqui. Use \\n para quebrar linha")
+async def anunciar(interaction: discord.Interaction, texto: str):
+    # Isso arruma a desorganização e quebra as linhas
+    texto_arrumado = texto.replace("\\n", "\n")
 
     embed = discord.Embed(
-        description=descricao_regras,
+        description=texto_arrumado,
         color=0x00FF00
-    )
-    
-    embed.set_image(url="https://p16-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/987665ba49dc494696f0847376401708.jpeg~tplv-0es2k971ck-image.image?rcl=2026090413411421ACB6BC0900447C92D7&rk3s=8e244e95&rrcfp=02a80fc2&x-expires=1791092495&x-signature=OIJeKOlaaXQVcvvndLZPfHm3hU4%3D")
-
-    await interaction.response.send_message(embed=embed)
-
-@tree.command(name="anunciar", description="Anunciar no marketplace")
-@app_commands.describe(produto="Nome do produto")
-async def anunciar(interaction: discord.Interaction, produto: str):
-    embed = discord.Embed(
-        title="BR2G Marketplace",
-        description=f"✅ **Anúncio:** **{produto}**",
-        color=0x5865F2
     )
     embed.set_image(url="https://p16-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/987665ba49dc494696f0847376401708.jpeg~tplv-0es2k971ck-image.image?rcl=2026090413411421ACB6BC0900447C92D7&rk3s=8e244e95&rrcfp=02a80fc2&x-expires=1791092495&x-signature=OIJeKOlaaXQVcvvndLZPfHm3hU4%3D")
 
