@@ -8,10 +8,8 @@ app = Flask('')
 @app.route('/')
 def home():
     return "Bot On!"
-
 def run():
     app.run(host='0.0.0.0', port=8080)
-
 def keep_alive():
     t = Thread(target=run)
     t.start()
@@ -31,32 +29,17 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        try:
-            conteudo = self.texto.value
-            conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
+        conteudo = self.texto.value
+        conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
 
-            embed = discord.Embed(
-                description=conteudo,
-                color=0x8A2BE2
-            )
+        embed = discord.Embed(
+            description=conteudo,
+            color=0x8A2BE2
+        )
+        embed.set_image(url="attachment://banner.png")
+        file = discord.File("banner.png", filename="banner.png")
 
-            # SE TIVER O banner.png NA PASTA, USA ELE (SEU BANNER COM PERSONAGENS)
-            # SE NÃO TIVER, USA O LINK FIXO PRA NÃO DAR ERRO
-            if os.path.exists("banner.png"):
-                embed.set_image(url="attachment://banner.png")
-                file = discord.File("banner.png", filename="banner.png")
-                await interaction.response.send_message(embed=embed, file=file)
-            else:
-                embed.set_image(url="https://cdn.allkeyshop.com/images/merchants/logotext/gameboost.webp")
-                await interaction.response.send_message(embed=embed)
-
-        except Exception as e:
-            print(f"Erro no anunciar: {e}")
-            # Isso impede o erro "Algo deu errado"
-            if not interaction.response.is_done():
-                await interaction.response.send_message("Deu um erro ao criar o anúncio, mas o bot não caiu. Verifique se o arquivo banner.png está na pasta.", ephemeral=True)
-            else:
-                await interaction.followup.send("Deu um erro ao criar o anúncio.", ephemeral=True)
+        await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
