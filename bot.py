@@ -1,59 +1,28 @@
-import os
-import discord
-from discord.ext import commands
-from flask import Flask
-from threading import Thread
-
-# --- CONFIG ---
-COR_BORDA = 0x5865F2
-TOKEN = os.getenv("TOKEN")
-
-# --- FLASK PRA MANTER ONLINE (se você usa) ---
-app = Flask('')
-
-@app.route('/')
-def home():
-    return "Bot online!"
-
-def run_flask():
-    app.run(host='0.0.0.0', port=8080)
-
-# --- BOT ---
-intents = discord.Intents.default()
-intents.message_content = True
-
-bot = commands.Bot(command_prefix="!", intents=intents)
-tree = bot.tree
-
-@bot.event
-async def on_ready():
-    print(f"Logado como {bot.user}")
-    try:
-        synced = await tree.sync()
-        print(f"{len(synced)} comandos sincronizados")
-    except Exception as e:
-        print(e)
-
-# --- COMANDO CORRIGIDO: AGORA ELE USA O TEXTO QUE VOCÊ DIGITA ---
-@tree.command(name="anunciar", description="Envia um anúncio para o canal")
-async def anunciar(interaction: discord.Interaction, texto: str, titulo: str = "📢 Anúncio - GameBoost Marketplace"):
-    # só ADM
-    if not interaction.user.guild_permissions.administrator:
-        await interaction.response.send_message("❌ Só ADM pode usar.", ephemeral=True)
-        return
-
-    embed = discord.Embed(
-        title=titulo,
-        description=texto,
-        color=COR_BORDA
+embed = discord.Embed(
+    title="GameBoost Marketplace | Regras e Orientações do Middleman",
+    color=0x2ECC71, # cor da barrinha verde fina igual do print
+    description=(
+        "·  📜 **Siga os [Termos de Serviço](https://discord.com/terms) e as [Diretrizes da Comunidade](https://discord.com/guidelines) do Discord**\n"
+        "GameBoost Marketplace funciona na plataforma Discord. Todos os membros devem seguir os Termos de Serviço e as Diretrizes da Comunidade.\n"
+        "O descumprimento pode resultar em remoção imediata ou blacklist dos nossos serviços.\n\n"
+        
+        "·  ✅ Use o serviço oficial de Middleman do servidor quando solicitado.\n\n"
+        
+        "·  ⚠️ Ao abrir um ticket, inclua os detalhes e links relevantes quando necessário.\n\n"
+        
+        "·  🔒 Não compartilhe dados pessoais ou senhas.\n\n"
+        
+        "·  💬 Se algo der errado, entre em contato com a equipe ou o suporte.\n\n"
+        "Para mais informações, contate <@634098800822059012> ou visite <#1544753178434867390>.\n"
+        "Não abra um ticket de Middleman apenas para fazer perguntas; marque um moderador ou membro da administração.\n\n"
+        
+        "·  **Atividades Maliciosas**\n"
+        "GameBoost não tolera fraudes, roubo de cookies, phishing ou captura de IP. Qualquer envolvimento resultará em blacklist permanente e denúncia ao Trust & Safety.\n\n"
+        
+        "·  **Trocas e Divulgação**\n"
+        "Publicidade por DM é proibida. Para comprar anúncio contate <@634098800822059012>.\n"
+        "Para trocas e vendas use <#1544752499670384720> e utilize nosso serviço de MM!"
     )
-    embed.set_thumbnail(url=bot.user.display_avatar.url)
-    embed.set_footer(text="🚀 GameBoost Marketplace", icon_url=bot.user.display_avatar.url)
-
-    await interaction.channel.send(embed=embed)
-    await interaction.response.send_message("✅ Enviado!", ephemeral=True)
-
-# Inicia flask em segundo plano
-Thread(target=run_flask).start()
-
-bot.run(TOKEN)
+)
+embed.set_thumbnail(url="https://i.imgur.com/SEU_LOGO_AQUI.png")
+embed.set_footer(text="GameBoost Marketplace • Regras atualizadas")
