@@ -30,19 +30,16 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        # Isso arruma se você colar tudo embolado
         conteudo = self.texto.value
-        # Separa os tópicos automaticamente
         conteudo = conteudo.replace(" · ", "\n\n· ").replace(" - ", "\n\n- ")
 
         embed = discord.Embed(
             description=conteudo,
-            color=0x8A2BE2  # BORDA ROXA
+            color=0x8A2BE2
         )
-        embed.set_image(url="attachment://banner.png")
+        embed.set_image(url="https://cdn.allkeyshop.com/images/merchants/logotext/gameboost.webp")
 
-        file = discord.File("banner.png", filename="banner.png")
-        await interaction.response.send_message(embed=embed, file=file)
+        await interaction.response.send_message(embed=embed)
 
 @bot.event
 async def on_ready():
