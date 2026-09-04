@@ -39,9 +39,10 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
             description=conteudo,
             color=0x8A2BE2  # BORDA ROXA
         )
-        embed.set_image(url="https://i.imgur.com/8Km9tLL.png")
+        embed.set_image(url="attachment://banner.png")
 
-        await interaction.response.send_message(embed=embed)
+        file = discord.File("banner.png", filename="banner.png")
+        await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
