@@ -29,8 +29,6 @@ async def on_ready():
 
 @tree.command(name="regras", description="Manda as regras com a logo embaixo")
 async def regras(interaction: discord.Interaction):
-    await interaction.response.defer(ephemeral=True)
-
     descricao_regras = """
 ou captura de IP.
 Qualquer envolvimento em atividade maliciosa ou ilegal resultará em blacklist permanente e poderá ser denunciado ao Discord Trust & Safety.
@@ -50,26 +48,21 @@ Use o bom senso, seja respeitoso e ajude a manter BR2G Marketplace seguro, organ
         color=0x00FF00
     )
     
-    embed.set_image(url="COLOQUE_O_LINK_DA_SUA_IMAGEM_AQUI")
+    embed.set_image(url="https://p16-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/987665ba49dc494696f0847376401708.jpeg~tplv-0es2k971ck-image.image?rcl=2026090413411421ACB6BC0900447C92D7&rk3s=8e244e95&rrcfp=02a80fc2&x-expires=1791092495&x-signature=OIJeKOlaaXQVcvvndLZPfHm3hU4%3D")
 
-    await interaction.channel.send(embed=embed)
-    await interaction.followup.send("Regras enviadas!", ephemeral=True)
+    await interaction.response.send_message(embed=embed)
 
 @tree.command(name="anunciar", description="Anunciar no marketplace")
 @app_commands.describe(produto="Nome do produto")
 async def anunciar(interaction: discord.Interaction, produto: str):
-    await interaction.response.defer(ephemeral=True)
-
     embed = discord.Embed(
         title="BR2G Marketplace",
         description=f"✅ **Anúncio:** **{produto}**",
         color=0x5865F2
     )
+    embed.set_image(url="https://p16-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/987665ba49dc494696f0847376401708.jpeg~tplv-0es2k971ck-image.image?rcl=2026090413411421ACB6BC0900447C92D7&rk3s=8e244e95&rrcfp=02a80fc2&x-expires=1791092495&x-signature=OIJeKOlaaXQVcvvndLZPfHm3hU4%3D")
 
-    embed.set_image(url="COLOQUE_O_LINK_DA_SUA_IMAGEM_AQUI")
-
-    await interaction.channel.send(embed=embed)
-    await interaction.followup.send(f"Anunciado: {produto}", ephemeral=True)
+    await interaction.response.send_message(embed=embed)
 
 keep_alive()
 bot.run(os.getenv("DISCORD_TOKEN"))
