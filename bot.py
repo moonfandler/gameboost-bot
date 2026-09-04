@@ -39,9 +39,12 @@ class AnunciarModal(discord.ui.Modal, title="Criar Anúncio Organizado"):
             description=conteudo,
             color=0x8A2BE2  # BORDA ROXA
         )
-        embed.set_image(url="https://p16-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/987665ba49dc494696f0847376401708.jpeg~tplv-0es2k971ck-image.image?rcl=2026090413411421ACB6BC0900447C92D7&rk3s=8e244e95&rrcfp=02a80fc2&x-expires=1791092495&x-signature=OIJeKOlaaXQVcvvndLZPfHm3hU4%3D")
+        
+        # IMAGEM NOVA SEM MARCA D'ÁGUA
+        file = discord.File("banner.png", filename="banner.png")
+        embed.set_image(url="attachment://banner.png")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, file=file)
 
 @bot.event
 async def on_ready():
